@@ -2,23 +2,46 @@ esphome:
   name: roomba
   platform: ESP8266
   board: d1_mini
+
   includes:
     - roomba_component.h
   libraries:
-    - Roomba=https://github.com/Apocrathia/Roomba
+    - Roomba=https://github.com/davidecavestro/Roomba.git
+#    - Roomba=file:///config/Roomba
+
+  platformio_options:
+    build_flags: -D HAVE_HWSERIAL0
 
 substitutions:
   name: "roomba"
   # BRC pin, polling interval in milliseconds
-  init: 'RoombaComponent::instance(D5, 1000);'
+`  init: 'RoombaComponent::instance(2, 1000);'
+
+
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: !secret wifi_password
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-logger:
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Roomba Fallback Hotspot"
+    password: !secret wifi_password
 
-ota:
+captive_portal:
+
+
+
+
 
 custom_component:
   - lambda: |-
@@ -29,7 +52,6 @@ sensor:
    lambda: |-
       auto r = ${init}
       return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor, r->batteryPercentSensor};
-
    sensors:
      - name: "${name} distance"
        unit_of_measurement: "mm"

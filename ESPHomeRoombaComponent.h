@@ -1,5 +1,6 @@
 #include "esphome.h"
 #include <Roomba.h>
+#include <SoftwareSerial.h>
 
 class RoombaComponent : public PollingComponent, public CustomAPIDevice { 
   protected:
@@ -18,8 +19,8 @@ class RoombaComponent : public PollingComponent, public CustomAPIDevice {
 
 
     void on_command(std::string command) {
-        this->IR_wakeup();
-        
+        this->brc_wakeup();
+
         if (command == "turn_on" || command == "turn_off" || command == "start" || command == "stop")
             this->roomba.cover();
         else if (command == "dock" || command == "return_to_base")
@@ -133,7 +134,7 @@ class RoombaComponent : public PollingComponent, public CustomAPIDevice {
 
   private: 
     RoombaComponent(uint8_t brcPin, uint32_t updateInterval) : 
-        PollingComponent(updateInterval), roomba(&Serial, Roomba::Baud115200)
+        PollingComponent(updateInterval), roomba(new SoftwareSerial(5,4), Roomba::Baud115200)
     {
         this->brcPin = brcPin;
         this->updateInterval = updateInterval;
