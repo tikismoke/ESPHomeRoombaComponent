@@ -51,7 +51,7 @@ sensor:
  - platform: custom
    lambda: |-
       auto r = ${init}
-      return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor, r->batteryPercentSensor};
+      return {r->distanceSensor, r->voltageSensor, r->currentSensor, r->chargeSensor, r->capacitySensor, r->batteryPercentSensor, r->temperatureSensor};
    sensors:
      - name: "${name} distance"
        unit_of_measurement: "mm"
@@ -71,6 +71,9 @@ sensor:
      - name: "${name} battery"
        unit_of_measurement: "%"
        accuracy_decimals: 0
+      - name: "${name} temperature"
+        unit_of_measurement: "°C"
+        accuracy_decimals: 0
        
 text_sensor:
   - platform: custom
